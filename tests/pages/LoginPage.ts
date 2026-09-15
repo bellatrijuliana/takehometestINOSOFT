@@ -24,7 +24,7 @@ export class LoginPage {
   }
 
   async goto() {
-    await this.page.goto('https://advantageonlineshopping.com/');
+    await this.page.goto('https://advantageonlineshopping.com/#/');
   }
 
   async openLoginPopUp() {
