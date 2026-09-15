@@ -36,8 +36,11 @@ export class CheckoutPage {
   readonly orderConfirmationMessage: Locator;
   readonly orderNumber: Locator;
   readonly trackingNumber: Locator;
+
   readonly invalidInputs: Locator;
   readonly paymentErrorMessage: Locator;
+  readonly cardNumberError: Locator;
+
 
   constructor(page: Page) {
     this.page = page;
@@ -73,10 +76,15 @@ export class CheckoutPage {
 
     this.invalidInputs = page.locator('input.ng-invalid, select.ng-invalid');
     this.paymentErrorMessage = page.locator('#safepayErrorMessage, .invalid');
+
+    this.cardNumberError =page.locator('#creditCard + label.invalid'); 
+
+
   }
 
   async fillShippingDetails(firstName: string, lastName: string, phone: string, country: string, city: string, address: string, postalCode: string, state: string) {
     await this.firstNameInput.fill(firstName);
+    await this.firstNameInput.blur();
     await this.lastNameInput.fill(lastName);
     await this.phoneNumberInput.fill(phone);
     //await this.countryInput.selectOption(country);
@@ -94,7 +102,7 @@ export class CheckoutPage {
     year: string = '2028',
     cardHolderName: string = 'Julia Lia') {
     await this.mastercreditOption.click();
-    //await this.editMasterCredit.click();
+    // await this.editMasterCredit.click();
     //await this.cardNumberInput.fill(cardNumber);
    // await this.cvvInput.fill(cvv);
    // await this.monthExpiryInput.selectOption(month);
@@ -134,5 +142,15 @@ export class CheckoutPage {
       await this.page.waitForLoadState('networkidle');
 
   }
+  }
+  async clearShippingDetails() {
+  const shippingInputs = this.page.locator('.sec-view-div input');
+  const count = await shippingInputs.count();
+
+  for (let i = 0; i < count; i++) {
+    await shippingInputs.nth(i).focus();
+    await shippingInputs.nth(i).fill('');
+    await shippingInputs.nth(i).dispatchEvent('blur');
+}
 }
 }
